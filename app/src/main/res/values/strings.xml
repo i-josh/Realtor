@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Realtor</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nav_home">Listings</string>
+    <string name="nav_categories">Categories</string>
+    <string name="nav_drawer_open">drawer open</string>
+    <string name="nav_drawer_close">drawer close</string>
+    <string name="launch_rent_text">I Want To Rent</string>
+    <string name="launch_rent_out_text">I Want To Rent Out</string>
+    <string name="sign_up_title">Sign Up</string>
+    <string name="sign_up_full_name">Full Name</string>
+    <string name="sign_up_email">Email</string>
+    <string name="sign_up_password">Password</string>
+    <string name="sign_up_re_enter_password">Re-enter password</string>
+    <string name="sign_up_phone_number">Phone Number</string>
+    <string name="sign_up_birth_year">Birth year</string>
+    <string name="sign_up_button">Sign up</string>
+    <string name="sign_up_have_an_account">Have an account?</string>
+    <string name="have_account_sign_in">Sign in</string>
+    <string name="sign_in_title">Sign In</string>
+    <string name="sign_in_email">Email</string>
+    <string name="sign_in_password">Password</string>
+    <string name="sign_in_forgot_password">Forgot password?</string>
+    <string name="sign_in_button">Sign in</string>
+    <string name="sign_in_don_t_have_an_account">Don\'t have an account?</string>
+    <string name="dont_have_account_sign_up">Sign Up</string>
+    <string name="nav_wish_list">Wish List</string>
+</resources>
