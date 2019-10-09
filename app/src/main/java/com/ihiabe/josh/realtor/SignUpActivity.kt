@@ -12,7 +12,7 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sign_up)
 
         sign_up_button.setOnClickListener {
-            startActivity(Intent(this,SignInActivity::class.java))
+            startActivity(Intent(this,VerifyPhoneNumber::class.java))
         }
     }
 }

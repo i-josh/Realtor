@@ -24,7 +24,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_margin="@dimen/edit_text_margin"
                 android:hint="@string/sign_up_full_name"
                 android:textSize="@dimen/text_small" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -37,7 +37,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_margin="@dimen/edit_text_margin"
                 android:hint="@string/sign_up_email"
                 android:inputType="textEmailAddress"
                 android:textSize="@dimen/text_small" />
@@ -51,7 +51,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_margin="@dimen/edit_text_margin"
                 android:hint="@string/sign_up_password"
                 android:inputType="textPassword"
                 android:textSize="@dimen/text_small" />
@@ -65,7 +65,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_margin="@dimen/edit_text_margin"
                 android:hint="@string/sign_up_re_enter_password"
                 android:inputType="textPassword"
                 android:textSize="@dimen/text_small" />
@@ -79,7 +79,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_margin="@dimen/edit_text_margin"
                 android:hint="@string/sign_up_phone_number"
                 android:inputType="number"
                 android:textSize="@dimen/text_small" />
@@ -93,7 +93,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_margin="@dimen/edit_text_margin"
                 android:hint="@string/sign_up_birth_year"
                 android:inputType="number"
                 android:maxLength="4"
