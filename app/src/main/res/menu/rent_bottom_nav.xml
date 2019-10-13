@@ -7,8 +7,4 @@
     <item android:title="@string/nav_wish_list"
         android:id="@+id/wishListFragment"
         android:icon="@drawable/ic_favorite"/>
-    <item
-        android:title="@string/nav_categories"
-        android:id="@+id/categoriesFragment"
-        android:icon="@drawable/ic_filter"/>
 </menu>
