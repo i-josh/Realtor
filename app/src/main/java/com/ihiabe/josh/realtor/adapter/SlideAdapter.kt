@@ -1,28 +1,27 @@
-package com.ihiabe.josh.realtor
+package com.ihiabe.josh.realtor.adapter
 
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
+import com.squareup.picasso.Picasso
 
-class SlideAdapter(private val context: Context): PagerAdapter() {
-
-    private val images = intArrayOf(R.drawable.hailey_baldwin_4k_2017,R.drawable.gal_gadot_2)
+class SlideAdapter(private val context: Context,
+                   private val imageUrls: Array<String>): PagerAdapter() {
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
         return view == `object`
     }
 
     override fun getCount(): Int {
-        return images.size
+        return imageUrls.size
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val imageView = ImageView(context)
-        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-        imageView.setImageResource(images[position])
-        container.addView(imageView,0)
+        Picasso.get().load(imageUrls[position]).fit().centerCrop().into(imageView)
+        container.addView(imageView)
         return imageView
     }
 

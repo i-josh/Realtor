@@ -1,84 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardElevation="5dp">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listing_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/listing_item"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:drawableStart="@drawable/ic_location"
-            android:drawablePadding="5dp"
-            android:text="Maitama, Abuja"
-            android:layout_marginStart="8dp"
-            android:textStyle="bold"
-            android:textColor="@color/mildBlack"
-            android:textSize="@dimen/text_small" />
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:layout_marginTop="8dp" />
-
-        <com.viewpagerindicator.CirclePageIndicator
-            android:id="@+id/indicator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:padding="10dip"
-            app:centered="true"
-            app:fillColor="@color/colorAccent"
-            app:pageColor="@android:color/white"
-            app:snap="false" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:orientation="horizontal">
-            <Button
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@drawable/ic_favorite" />
-
-            <Button
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="15dp"
-                android:background="@drawable/ic_phone"
-                />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="8dp"
-            android:text="Three bedroom apartment for rent in ademola adetokumbo crescent wuse 2 abuja"
-            android:textColor="@color/mildBlack"
-            android:textSize="@dimen/text_very_small" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="N1,800,000"
-            android:textColor="@color/mildBlack"
-            android:textSize="@dimen/text_large"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

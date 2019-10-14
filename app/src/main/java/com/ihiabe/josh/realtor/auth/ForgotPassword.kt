@@ -1,7 +1,8 @@
-package com.ihiabe.josh.realtor
+package com.ihiabe.josh.realtor.auth
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.ihiabe.josh.realtor.R
 
 class ForgotPassword : AppCompatActivity() {
 

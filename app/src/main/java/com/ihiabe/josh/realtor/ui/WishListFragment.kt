@@ -1,10 +1,11 @@
-package com.ihiabe.josh.realtor
+package com.ihiabe.josh.realtor.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.ihiabe.josh.realtor.R
 
 class WishListFragment: Fragment() {
 

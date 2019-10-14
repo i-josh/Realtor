@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'com.android.application'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -45,4 +47,14 @@ dependencies {
         exclude module: 'appcompat-v7'
         exclude module: 'support-v4'
     }
+
+    //firebase database
+    implementation 'com.google.firebase:firebase-database:19.1.0'
+
+    //firebase ui database
+    implementation 'com.firebaseui:firebase-ui-database:6.0.2'
+
+    //picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }
+apply plugin: 'com.google.gms.google-services'

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ihiabe.josh.realtor">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,15 +10,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ForgotPassword"
+        <activity android:name=".auth.ForgotPassword"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
-        <activity android:name=".VerifyPhoneNumber"
+        <activity android:name=".auth.VerifyPhoneNumber"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-            android:name=".SignInActivity"
+            android:name=".auth.SignInActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".SignUpActivity"
+            android:name=".auth.SignUpActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".LaunchActivity">
             <intent-filter>
@@ -26,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RentActivity" />
+        <activity android:name=".ui.RentActivity" />
     </application>
 
 </manifest>
