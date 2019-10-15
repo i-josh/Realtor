@@ -40,15 +40,6 @@
             app:itemIconTint="@color/bottom_nav_item_state"
             app:itemTextColor="@color/bottom_nav_item_state"
             app:menu="@menu/rent_bottom_nav" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_listing_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/bottom_nav"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="16dp"
-            app:srcCompat="@drawable/ic_add"/>
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView

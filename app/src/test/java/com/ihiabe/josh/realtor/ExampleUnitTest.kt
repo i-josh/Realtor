@@ -1,5 +1,4 @@
 package com.ihiabe.josh.realtor
-
 import org.junit.Test
 
 import org.junit.Assert.*

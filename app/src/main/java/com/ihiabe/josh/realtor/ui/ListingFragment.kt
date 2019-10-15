@@ -1,10 +1,12 @@
 package com.ihiabe.josh.realtor.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,18 +14,22 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.*
 import com.ihiabe.josh.realtor.R
 import com.ihiabe.josh.realtor.adapter.SlideAdapter
 import com.ihiabe.josh.realtor.model.Listing
 import com.viewpagerindicator.CirclePageIndicator
-
+import java.text.DecimalFormat
 
 class ListingFragment : Fragment() {
 
     private lateinit var database: FirebaseDatabase
     private lateinit var databaseReference: DatabaseReference
     private lateinit var listingRecyclerView: RecyclerView
+    private lateinit var showProgress: ProgressBar
+    private lateinit var addListingButton: FloatingActionButton
+    private val decimalFormat = DecimalFormat("#,##0.00")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -38,6 +44,18 @@ class ListingFragment : Fragment() {
         listingRecyclerView.hasFixedSize()
         listingRecyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
 
+        showProgress = view.findViewById(R.id.progressBarListing)
+        addListingButton = view.findViewById(R.id.add_listing_button)
+
+        listingRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy<0 && !addListingButton.isShown)
+                    addListingButton.show()
+                else if (dy>0 && addListingButton.isShown)
+                    addListingButton.hide()
+            }
+        })
+
         database = FirebaseDatabase.getInstance()
         databaseReference = database.reference.child("Listing")
 
@@ -51,6 +69,7 @@ class ListingFragment : Fragment() {
         ).setLifecycleOwner(this).build()
 
         val adapter = object : FirebaseRecyclerAdapter<Listing, ListingViewHolder>(options) {
+            @SuppressLint("SetTextI18n")
             override fun onBindViewHolder(
                 holder: ListingViewHolder,
                 position: Int,
@@ -63,7 +82,9 @@ class ListingFragment : Fragment() {
                 holder.indicator.setViewPager(holder.imageSlide)
                 holder.listinglocation.text = model.location
                 holder.listingDescription.text = model.description
-                holder.listingPrice.text = model.price.toString()
+                holder.listingPrice.text = "₦${decimalFormat.format(model.price)}"
+
+                showProgress.visibility = if (itemCount == 0) View.VISIBLE else View.GONE
             }
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListingViewHolder {
