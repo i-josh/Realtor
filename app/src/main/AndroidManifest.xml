@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".auth.ForgotPassword"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
-        <activity android:name=".auth.VerifyPhoneNumber"
+        <activity android:name=".auth.VerifyEmail"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name=".auth.SignInActivity"

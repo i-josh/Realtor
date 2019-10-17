@@ -18,6 +18,10 @@ class SignUpActivity : AppCompatActivity() {
             if (validateSignUpForm())
                 startVerifyPhone()
         }
+        sign_in_text.setOnClickListener {
+            startActivity(Intent(this,SignInActivity::class.java))
+            finish()
+        }
     }
     private fun validateSignUpForm(): Boolean {
         val editTexts = arrayOf<TextInputEditText>(sign_up_full_name,sign_up_email,
@@ -60,14 +64,17 @@ class SignUpActivity : AppCompatActivity() {
         val email = sign_up_email.text.toString()
         val password = sign_up_password.text.toString()
         val phoneNumber = sign_up_phone_number.text.toString()
+        val birthYear = sign_up_birth_year.text.toString()
 
-        val intent = Intent(this,VerifyPhoneNumber::class.java)
+        val intent = Intent(this,VerifyEmail::class.java)
         intent.putExtra(FULL_NAME,fullName)
         intent.putExtra(EMAIL,email)
         intent.putExtra(PASSWORD,password)
         intent.putExtra(PHONE_NUMBER,phoneNumber)
+        intent.putExtra(BIRTH_YEAR,birthYear)
 
         startActivity(intent)
+        finish()
     }
 
     companion object{
@@ -75,5 +82,6 @@ class SignUpActivity : AppCompatActivity() {
         const val EMAIL = "com.ihiabe.josh.realtor.auth.EMAIL"
         const val PASSWORD = "com.ihiabe.josh.realtor.auth.PASSWORD"
         const val PHONE_NUMBER = "com.ihiabe.josh.realtor.auth.PHONE_NUMBER"
+        const val BIRTH_YEAR = "com.ihiabe.josh.realtor.auth.BIRTH_YEAR"
     }
 }

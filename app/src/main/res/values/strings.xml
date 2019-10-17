@@ -27,9 +27,11 @@
     <string name="sign_in_don_t_have_an_account">Don\'t have an account?</string>
     <string name="dont_have_account_sign_up">Sign Up</string>
     <string name="nav_wish_list">Wish List</string>
-    <string name="verify_phone_number">Verify Phone Number</string>
-    <string name="verification_code_sent_to">Verification code sent to</string>
+    <string name="verify_email">Verify Email</string>
+    <string name="verification_link_sent_to">Verification link sent to</string>
     <string name="resend_verify_code">Resend</string>
     <string name="forgot_password_enter_email">Enter Email</string>
     <string name="forgot_password_title">Forgot Password</string>
+    <string name="resend_verify_email">Resend</string>
+    <string name="continue_verify">Continue</string>
 </resources>
