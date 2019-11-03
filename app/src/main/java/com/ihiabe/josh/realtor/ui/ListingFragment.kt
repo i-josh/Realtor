@@ -1,6 +1,7 @@
 package com.ihiabe.josh.realtor.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -60,6 +61,10 @@ class ListingFragment : Fragment() {
         databaseReference = database.reference.child("Listing")
 
         initFireBase()
+
+        addListingButton.setOnClickListener {
+            startActivity(Intent(activity!!.applicationContext,AddListingActivity::class.java))
+        }
     }
 
     private fun initFireBase() {

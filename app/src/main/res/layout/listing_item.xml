@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="4dp"
     app:cardElevation="5dp">
 
     <LinearLayout
@@ -16,59 +16,45 @@
             android:id="@+id/listing_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="8dp"
             android:drawableStart="@drawable/ic_location"
-            android:drawablePadding="5dp"
-            android:text="Maitama, Abuja"
-            android:layout_marginStart="8dp"
-            android:textStyle="bold"
+            android:drawablePadding="2dp"
+            android:text="@string/location"
             android:textColor="@color/mildBlack"
-            android:textSize="@dimen/text_small" />
+            android:textSize="@dimen/text_small"
+            android:textStyle="bold" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:layout_marginTop="8dp" />
+            android:layout_height="400dp"
+            android:layout_marginTop="4dp" />
 
         <com.viewpagerindicator.CirclePageIndicator
             android:id="@+id/indicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            android:padding="10dip"
+            android:padding="10dp"
             app:centered="true"
             app:fillColor="@color/colorAccent"
-            app:pageColor="@android:color/white"
+            app:pageColor="@android:color/darker_gray"
             app:snap="false" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/fav_listing"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@drawable/ic_favorite" />
-
-            <Button
-                android:id="@+id/call_listing"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="15dp"
-                android:background="@drawable/ic_phone"
-                />
-        </LinearLayout>
+        <Button
+            android:id="@+id/fav_listing"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_favorite_border"
+            android:layout_marginStart="8dp"/>
 
         <TextView
             android:id="@+id/listing_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
-            android:text="Three bedroom apartment for rent in ademola adetokumbo crescent wuse 2 abuja"
+            android:text="@string/description"
             android:textColor="@color/mildBlack"
             android:textSize="@dimen/text_very_small" />
 
@@ -77,13 +63,58 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginBottom="8dp"
-            android:text="N1,800,000"
-            android:textColor="@color/mildBlack"
+            android:text="@string/price"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_large"
             android:textStyle="bold" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/listing_user_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/dp" />
+
+            <TextView
+                android:id="@+id/listing_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="0dp"
+                android:layout_toStartOf="@+id/call_listing"
+                android:layout_toEndOf="@id/listing_user_image"
+                android:maxLines="1"
+                android:text="@string/username"
+                android:textColor="@color/mildBlack"
+                android:textSize="@dimen/text_small"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/listing_user_name"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/listing_user_image"
+                android:text="@string/app_name"
+                android:textSize="@dimen/text_very_small" />
+
+            <Button
+                android:id="@+id/call_listing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/call_button_background"
+                android:text="@string/call"
+                android:textColor="@android:color/white" />
+        </RelativeLayout>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

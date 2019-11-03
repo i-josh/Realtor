@@ -34,6 +34,11 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(editTexts[1].text.toString()).matches()){
+            editTexts[1].error = "invalid email address"
+            return false
+        }
+
         if (editTexts[2].text.toString() != editTexts[3].text.toString()){
             editTexts[3].error = "password does not match"
             return false

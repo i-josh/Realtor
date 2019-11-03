@@ -34,4 +34,16 @@
     <string name="forgot_password_title">Forgot Password</string>
     <string name="resend_verify_email">Resend</string>
     <string name="continue_verify">Continue</string>
+    <string name="username">Username</string>
+    <string name="call">Call</string>
+    <string name="add_images">Add images</string>
+    <string name="location">Location</string>
+    <string name="description">Description</string>
+    <string name="price">Price</string>
+    <string name="submit">Submit</string>
+    <string name="listing_image_1">listing image 1</string>
+    <string name="listing_image_2">listing image 2</string>
+    <string name="listing_image_3">listing image 3</string>
+    <string name="listing_image_4">listing image 4</string>
+    <string name="listing_image_5">listing image 5</string>
 </resources>
