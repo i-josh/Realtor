@@ -8,7 +8,7 @@ import androidx.viewpager.widget.PagerAdapter
 import com.squareup.picasso.Picasso
 
 class SlideAdapter(private val context: Context,
-                   private val imageUrls: Array<String>): PagerAdapter() {
+                   private val imageUrls: List<String>): PagerAdapter() {
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
         return view == `object`
@@ -20,7 +20,7 @@ class SlideAdapter(private val context: Context,
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val imageView = ImageView(context)
-        Picasso.get().load(imageUrls[position]).fit().centerCrop().into(imageView)
+        Picasso.with(context).load(imageUrls[position]).fit().centerCrop().into(imageView)
         container.addView(imageView)
         return imageView
     }

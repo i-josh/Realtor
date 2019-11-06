@@ -80,9 +80,7 @@ class ListingFragment : Fragment() {
                 position: Int,
                 model: Listing
             ) {
-                val listingImages = arrayOf(model.imageUrl1,model.imageUrl2,model.imageUrl3,
-                    model.imageUrl4,model.imageUrl5)
-                val slideAdapter = SlideAdapter(activity!!.applicationContext,listingImages)
+                val slideAdapter = SlideAdapter(activity!!.applicationContext,model.images)
                 holder.imageSlide.adapter = slideAdapter
                 holder.indicator.setViewPager(holder.imageSlide)
                 holder.listinglocation.text = model.location

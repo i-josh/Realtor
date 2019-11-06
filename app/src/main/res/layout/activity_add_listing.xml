@@ -69,88 +69,44 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
+    <Button
         android:id="@+id/add_images_button"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         android:layout_marginTop="8dp"
         android:text="@string/add_images"
         android:gravity="center"
-        android:textSize="@dimen/text_medium"
-        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_small"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout10" />
-
-    <ImageView
-        android:id="@+id/listing_image_1"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_images_button"
-        app:srcCompat="@drawable/ic_add_a_photo"
-        android:contentDescription="@string/listing_image_1" />
-
-    <ImageView
-        android:id="@+id/listing_image_2"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toEndOf="@id/listing_image_1"
-        app:layout_constraintTop_toBottomOf="@+id/add_images_button"
-        app:srcCompat="@drawable/ic_add_a_photo"
-        android:contentDescription="@string/listing_image_2" />
-
-    <ImageView
-        android:id="@+id/listing_image_3"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/listing_image_2"
-        app:layout_constraintTop_toBottomOf="@+id/add_images_button"
-        app:srcCompat="@drawable/ic_add_a_photo"
-        android:contentDescription="@string/listing_image_3" />
-
-    <ImageView
-        android:id="@+id/listing_image_4"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/listing_image_3"
-        app:srcCompat="@drawable/ic_add_a_photo"
-        android:contentDescription="@string/listing_image_4" />
-
-    <ImageView
-        android:id="@+id/listing_image_5"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@id/listing_image_4"
-        app:layout_constraintTop_toBottomOf="@id/listing_image_2"
-        app:srcCompat="@drawable/ic_add_a_photo"
-        android:contentDescription="@string/listing_image_5" />
 
     <Button
         android:id="@+id/submit_listing_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_background"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/button_background"
         android:text="@string/submit"
         android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <GridView
+        android:id="@+id/listing_image_grid"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/submit_listing_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/listing_image_5" />
+        app:layout_constraintTop_toBottomOf="@+id/add_images_button"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

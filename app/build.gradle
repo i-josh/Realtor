@@ -49,7 +49,7 @@ dependencies {
     }
 
     //firebase database
-    implementation 'com.google.firebase:firebase-database:19.1.0'
+    implementation 'com.google.firebase:firebase-database:19.2.0'
 
     //firebase ui database
     implementation 'com.firebaseui:firebase-ui-database:6.0.2'
@@ -57,10 +57,16 @@ dependencies {
     //firebase auth
     implementation 'com.google.firebase:firebase-auth:19.1.0'
 
+    //firebase storage
+    implementation 'com.google.firebase:firebase-storage:19.1.0'
+
     //picasso library
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 
     //circle image view
     implementation 'de.hdodenhof:circleimageview:3.0.0'
+
+    //fishbun image picker
+    implementation 'com.sangcomz:FishBun:0.11.2'
 }
 apply plugin: 'com.google.gms.google-services'
