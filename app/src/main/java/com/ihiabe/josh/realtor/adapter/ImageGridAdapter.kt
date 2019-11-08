@@ -19,7 +19,8 @@ class ImageGridAdapter(private val context: Context,
             ImageView(context)
         }else
             convertView as ImageView
-        Picasso.with(context).load(images[position]).into(imageView)
+        imageView.layoutParams = ViewGroup.LayoutParams(250,250)
+        Picasso.with(context).load(images[position]).fit().centerCrop().into(imageView)
         return imageView
     }
 

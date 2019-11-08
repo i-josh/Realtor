@@ -1,7 +1,10 @@
 package com.ihiabe.josh.realtor.ui
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +12,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,17 +22,21 @@ import androidx.viewpager.widget.ViewPager
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.ihiabe.josh.realtor.R
 import com.ihiabe.josh.realtor.adapter.SlideAdapter
 import com.ihiabe.josh.realtor.model.Listing
+import com.ihiabe.josh.realtor.model.User
 import com.viewpagerindicator.CirclePageIndicator
 import java.text.DecimalFormat
+import java.util.jar.Manifest
 
 class ListingFragment : Fragment() {
 
     private lateinit var database: FirebaseDatabase
-    private lateinit var databaseReference: DatabaseReference
+    private lateinit var listingRef: DatabaseReference
+    private lateinit var userRef: DatabaseReference
     private lateinit var listingRecyclerView: RecyclerView
     private lateinit var showProgress: ProgressBar
     private lateinit var addListingButton: FloatingActionButton
@@ -57,19 +67,21 @@ class ListingFragment : Fragment() {
             }
         })
 
+        val auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
-        databaseReference = database.reference.child("Listing")
+        listingRef = database.reference.child("Listing")
+        userRef = database.reference.child("Users").child(auth.currentUser!!.uid)
 
-        initFireBase()
+        initFireBaseUiDatabase()
 
         addListingButton.setOnClickListener {
             startActivity(Intent(activity!!.applicationContext,AddListingActivity::class.java))
         }
     }
 
-    private fun initFireBase() {
+    private fun initFireBaseUiDatabase() {
         val options = FirebaseRecyclerOptions.Builder<Listing>().setQuery(
-            databaseReference,
+            listingRef,
             Listing::class.java
         ).setLifecycleOwner(this).build()
 
@@ -87,6 +99,32 @@ class ListingFragment : Fragment() {
                 holder.listingDescription.text = model.description
                 holder.listingPrice.text = "₦${decimalFormat.format(model.price)}"
 
+                userRef.addValueEventListener(object: ValueEventListener{
+                    override fun onDataChange(p0: DataSnapshot) {
+                        val user = p0.getValue(User::class.java)
+                        holder.listingUsername.text = user!!.fullName
+                        holder.callListing.setOnClickListener {
+                            requestPhonePermission()
+                            if (ActivityCompat.checkSelfPermission(activity!!.applicationContext,
+                                  android.Manifest.permission.CALL_PHONE)
+                                != PackageManager.PERMISSION_GRANTED){
+                                Toast.makeText(activity!!.applicationContext,"please grant permission",
+                                    Toast.LENGTH_SHORT).show()
+                            }else{
+                                val intent = Intent(Intent.ACTION_CALL)
+                                intent.data = Uri.parse("tel:${user.phoneNumber}")
+                                startActivity(intent)
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(p0: DatabaseError) {
+                        Toast.makeText(activity!!.applicationContext,p0.code,Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                })
+
                 showProgress.visibility = if (itemCount == 0) View.VISIBLE else View.GONE
             }
 
@@ -103,11 +141,17 @@ class ListingFragment : Fragment() {
         adapter.startListening()
     }
 
+    private fun requestPhonePermission(){
+        ActivityCompat.requestPermissions((activity as AppCompatActivity),
+            arrayOf(android.Manifest.permission.CALL_PHONE),1)
+    }
+
     class ListingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal var imageSlide = itemView.findViewById<ViewPager>(R.id.pager)
         internal var listinglocation = itemView.findViewById<TextView>(R.id.listing_location)
         internal var listingDescription = itemView.findViewById<TextView>(R.id.listing_description)
         internal var listingPrice = itemView.findViewById<TextView>(R.id.listing_price)
+        internal var listingUsername = itemView.findViewById<TextView>(R.id.listing_user_name)
         internal var callListing = itemView.findViewById<Button>(R.id.call_listing)
         internal var favListing = itemView.findViewById<Button>(R.id.fav_listing)
         internal var indicator = itemView.findViewById<CirclePageIndicator>(R.id.indicator)
