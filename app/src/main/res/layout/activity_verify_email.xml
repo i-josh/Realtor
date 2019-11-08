@@ -27,7 +27,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/verification_link_sent_to"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.342"
+        app:layout_constraintHorizontal_bias="0.283"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
@@ -35,7 +35,7 @@
         android:id="@+id/verify_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:text="abc@me.com"
         android:textColor="@color/mildBlack"
         android:textStyle="bold"

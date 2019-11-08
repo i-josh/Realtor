@@ -28,7 +28,7 @@
     <string name="dont_have_account_sign_up">Sign Up</string>
     <string name="nav_wish_list">Wish List</string>
     <string name="verify_email">Verify Email</string>
-    <string name="verification_link_sent_to">Verification link sent to</string>
+    <string name="verification_link_sent_to">Verification link will be sent to </string>
     <string name="resend_verify_code">Resend</string>
     <string name="forgot_password_enter_email">Enter Email</string>
     <string name="forgot_password_title">Forgot Password</string>
@@ -41,9 +41,4 @@
     <string name="description">Description</string>
     <string name="price">Price</string>
     <string name="submit">Submit</string>
-    <string name="listing_image_1">listing image 1</string>
-    <string name="listing_image_2">listing image 2</string>
-    <string name="listing_image_3">listing image 3</string>
-    <string name="listing_image_4">listing image 4</string>
-    <string name="listing_image_5">listing image 5</string>
 </resources>

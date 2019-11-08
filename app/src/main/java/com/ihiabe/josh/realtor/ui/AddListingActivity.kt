@@ -9,21 +9,24 @@ import kotlinx.android.synthetic.main.activity_add_listing.*
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.ihiabe.josh.realtor.adapter.ImageGridAdapter
 import com.ihiabe.josh.realtor.model.Listing
+import com.ihiabe.josh.realtor.model.User
 import com.sangcomz.fishbun.FishBun
 import com.sangcomz.fishbun.adapter.image.impl.PicassoAdapter
 import com.sangcomz.fishbun.define.Define
 
 class AddListingActivity : AppCompatActivity() {
     private lateinit var listingReference: DatabaseReference
+    private lateinit var userRef: DatabaseReference
     private lateinit var storageReference: StorageReference
     private lateinit var imagesReference: StorageReference
     private lateinit var pushId: String
@@ -39,6 +42,9 @@ class AddListingActivity : AppCompatActivity() {
 
         storageReference = FirebaseStorage.getInstance().reference
         auth = FirebaseAuth.getInstance()
+        userRef = FirebaseDatabase.getInstance().reference
+            .child("Users")
+            .child(auth.currentUser!!.uid)
 
         listingReference = FirebaseDatabase.getInstance().reference
             .child("Listing").push()
@@ -49,13 +55,21 @@ class AddListingActivity : AppCompatActivity() {
             .child("Listing Images")
             .child(pushId)
 
-        submit_listing_button.setOnClickListener {
-            submit()
-        }
-
         add_images_button.setOnClickListener {
             addImageFromGallery()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.add_listing_menu,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item!!.itemId){
+            R.id.submit_listing -> submit()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun addImageFromGallery() {
@@ -79,33 +93,46 @@ class AddListingActivity : AppCompatActivity() {
 
     private fun submit(){
         if (validate()) {
-            val userId = auth.currentUser!!.uid
-            val location = add_listing_location.text.toString()
-            val description = add_listing_description.text.toString()
-            val price = add_listing_price.text.toString().toLong()
-            val images = mutableListOf<String>()
-            images.run {
-                imagesReference.child("image 1").downloadUrl.addOnSuccessListener {
-                    add(it.toString())
-                    val listing = Listing(userId, location, description, price,images)
-                    listingReference.setValue(listing).addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Toast.makeText(applicationContext, "listing added"
-                                , Toast.LENGTH_SHORT)
-                                .show()
-                            startActivity(Intent(applicationContext, RentActivity::class.java))
-                            finish()
+            userRef.addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(p0: DataSnapshot) {
+                    val user = p0.getValue(User::class.java)
+                    val userName = user!!.fullName
+                    val userPhoneNumber = user.phoneNumber
+                    val userId = auth.currentUser!!.uid
+                    val location = add_listing_location.text.toString()
+                    val description = add_listing_description.text.toString()
+                    val price = add_listing_price.text.toString().toLong()
+                    val images = mutableListOf<String>()
+                    images.run {
+                        imagesReference.child("image 1").downloadUrl.addOnSuccessListener {
+                            add(it.toString())
+                            val listing = Listing(userId,userName,userPhoneNumber,location,description,price,images)
+                            listingReference.setValue(listing).addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Toast.makeText(applicationContext, "listing added"
+                                        , Toast.LENGTH_SHORT)
+                                        .show()
+                                    startActivity(Intent(applicationContext, RentActivity::class.java))
+                                    finish()
+                                }
+                            }
                         }
                     }
+                    add(images, userId, userName, userPhoneNumber, location, description, price)
                 }
-            }
-            add(images, userId, location, description, price)
+
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+            })
         }
     }
 
     private fun add(
         images: MutableList<String>,
         userId: String,
+        userName: String,
+        userPhoneNumber: String,
         location: String,
         description: String,
         price: Long
@@ -113,63 +140,63 @@ class AddListingActivity : AppCompatActivity() {
         images.run {
             imagesReference.child("image 2").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(userId, location, description, price, images)
+                val listing = Listing(userId, userName, userPhoneNumber, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 3").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(userId, location, description, price, images)
+                val listing = Listing(userId, userName, userPhoneNumber, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 4").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(userId, location, description, price, images)
+                val listing = Listing(userId, userName, userPhoneNumber, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 5").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(userId, location, description, price, images)
+                val listing = Listing(userId, userName, userPhoneNumber, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 6").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(userId, location, description, price, images)
+                val listing = Listing(userId, userName, userPhoneNumber, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 7").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(userId, location, description, price, images)
+                val listing = Listing(userId, userName, userPhoneNumber, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 8").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(userId, location, description, price, images)
+                val listing = Listing(userId, userName, userPhoneNumber, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 9").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(userId, location, description, price, images)
+                val listing = Listing(userId, userName, userPhoneNumber, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 10").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(userId, location, description, price, images)
+                val listing = Listing(userId, userName, userPhoneNumber, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }

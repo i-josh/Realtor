@@ -6,9 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -36,7 +34,6 @@ class ListingFragment : Fragment() {
 
     private lateinit var database: FirebaseDatabase
     private lateinit var listingRef: DatabaseReference
-    private lateinit var userRef: DatabaseReference
     private lateinit var listingRecyclerView: RecyclerView
     private lateinit var showProgress: ProgressBar
     private lateinit var addListingButton: FloatingActionButton
@@ -67,15 +64,18 @@ class ListingFragment : Fragment() {
             }
         })
 
-        val auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
         listingRef = database.reference.child("Listing")
-        userRef = database.reference.child("Users").child(auth.currentUser!!.uid)
 
         initFireBaseUiDatabase()
 
         addListingButton.setOnClickListener {
-            startActivity(Intent(activity!!.applicationContext,AddListingActivity::class.java))
+            val user = FirebaseAuth.getInstance().currentUser
+            if (user != null)
+                startActivity(Intent(activity!!.applicationContext,AddListingActivity::class.java))
+            else
+                Toast.makeText(activity!!.applicationContext
+                    ,"please sign in",Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -98,12 +98,9 @@ class ListingFragment : Fragment() {
                 holder.listinglocation.text = model.location
                 holder.listingDescription.text = model.description
                 holder.listingPrice.text = "₦${decimalFormat.format(model.price)}"
+                holder.listingUsername.text = model.userName
 
-                userRef.addValueEventListener(object: ValueEventListener{
-                    override fun onDataChange(p0: DataSnapshot) {
-                        val user = p0.getValue(User::class.java)
-                        holder.listingUsername.text = user!!.fullName
-                        holder.callListing.setOnClickListener {
+                holder.callListing.setOnClickListener {
                             requestPhonePermission()
                             if (ActivityCompat.checkSelfPermission(activity!!.applicationContext,
                                   android.Manifest.permission.CALL_PHONE)
@@ -112,18 +109,10 @@ class ListingFragment : Fragment() {
                                     Toast.LENGTH_SHORT).show()
                             }else{
                                 val intent = Intent(Intent.ACTION_CALL)
-                                intent.data = Uri.parse("tel:${user.phoneNumber}")
+                                intent.data = Uri.parse("tel:${model.userPhoneNumber}")
                                 startActivity(intent)
                             }
                         }
-                    }
-
-                    override fun onCancelled(p0: DatabaseError) {
-                        Toast.makeText(activity!!.applicationContext,p0.code,Toast.LENGTH_SHORT)
-                            .show()
-                    }
-
-                })
 
                 showProgress.visibility = if (itemCount == 0) View.VISIBLE else View.GONE
             }
