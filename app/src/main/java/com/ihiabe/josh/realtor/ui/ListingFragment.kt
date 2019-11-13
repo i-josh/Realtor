@@ -1,7 +1,6 @@
 package com.ihiabe.josh.realtor.ui
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -20,15 +19,15 @@ import androidx.viewpager.widget.ViewPager
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.ihiabe.josh.realtor.R
 import com.ihiabe.josh.realtor.adapter.SlideAdapter
+import com.ihiabe.josh.realtor.auth.SignInActivity
 import com.ihiabe.josh.realtor.model.Listing
-import com.ihiabe.josh.realtor.model.User
 import com.viewpagerindicator.CirclePageIndicator
 import java.text.DecimalFormat
-import java.util.jar.Manifest
 
 class ListingFragment : Fragment() {
 
@@ -74,8 +73,12 @@ class ListingFragment : Fragment() {
             if (user != null)
                 startActivity(Intent(activity!!.applicationContext,AddListingActivity::class.java))
             else
-                Toast.makeText(activity!!.applicationContext
-                    ,"please sign in",Toast.LENGTH_SHORT).show()
+                Snackbar.make(view.findViewById(R.id.listingFragment)
+                    ,"Please sign in"
+                    ,Snackbar.LENGTH_LONG).setAction("Sign in"
+                ) {
+                    startActivity(Intent(activity!!.applicationContext,SignInActivity::class.java))
+                }.show()
         }
     }
 

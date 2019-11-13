@@ -41,4 +41,8 @@
     <string name="description">Description</string>
     <string name="price">Price</string>
     <string name="submit">Submit</string>
+    <string name="home">Home</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="feedback">Feedback</string>
+    <string name="about_app">About App</string>
 </resources>

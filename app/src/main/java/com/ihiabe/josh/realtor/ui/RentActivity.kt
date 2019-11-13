@@ -33,16 +33,4 @@ class RentActivity : AppCompatActivity() {
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
     }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.logout_menu,menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item!!.itemId){
-            R.id.logout -> FirebaseAuth.getInstance().signOut()
-        }
-        return super.onOptionsItemSelected(item)
-    }
 }
