@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -14,8 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.AddListingActivity"
-            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".ui.AboutActivity"></activity>
+        <activity
+            android:name=".ui.AddListingActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".auth.ForgotPassword"
             android:windowSoftInputMode="adjustResize|stateHidden" />
@@ -35,7 +37,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.RentActivity" />
+        <activity android:name=".ui.MainActivity" />
     </application>
 
 </manifest>

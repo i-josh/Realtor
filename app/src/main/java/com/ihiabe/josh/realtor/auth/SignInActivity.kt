@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.ihiabe.josh.realtor.ui.RentActivity
+import com.ihiabe.josh.realtor.ui.MainActivity
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import com.ihiabe.josh.realtor.R
 
@@ -44,7 +44,7 @@ class SignInActivity : AppCompatActivity() {
         val emailFlag = user!!.isEmailVerified
 
         if (emailFlag) {
-            startActivity(Intent(this, RentActivity::class.java))
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
         } else {
             Toast.makeText(this, "Verify Your Email", Toast.LENGTH_SHORT).show()

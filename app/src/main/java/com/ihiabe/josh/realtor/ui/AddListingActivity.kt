@@ -112,7 +112,7 @@ class AddListingActivity : AppCompatActivity() {
                                     Toast.makeText(applicationContext, "listing added"
                                         , Toast.LENGTH_SHORT)
                                         .show()
-                                    startActivity(Intent(applicationContext, RentActivity::class.java))
+                                    startActivity(Intent(applicationContext, MainActivity::class.java))
                                     finish()
                                 }
                             }
