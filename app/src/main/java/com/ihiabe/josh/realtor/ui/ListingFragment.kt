@@ -6,10 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -25,6 +22,7 @@ import com.google.firebase.database.*
 import com.ihiabe.josh.realtor.R
 import com.ihiabe.josh.realtor.adapter.SlideAdapter
 import com.ihiabe.josh.realtor.auth.SignInActivity
+import com.ihiabe.josh.realtor.model.Favourite
 import com.ihiabe.josh.realtor.model.Listing
 import com.viewpagerindicator.CirclePageIndicator
 import java.text.DecimalFormat
@@ -47,6 +45,10 @@ class ListingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        database = FirebaseDatabase.getInstance()
+        listingRef = database.reference.child("Listing")
+        listingRef.keepSynced(true)
+
         listingRecyclerView = view.findViewById(R.id.listing_recycler_view)
         listingRecyclerView.hasFixedSize()
         listingRecyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
@@ -62,9 +64,6 @@ class ListingFragment : Fragment() {
                     addListingButton.hide()
             }
         })
-
-        database = FirebaseDatabase.getInstance()
-        listingRef = database.reference.child("Listing")
 
         initFireBaseUiDatabase()
 
@@ -108,7 +107,8 @@ class ListingFragment : Fragment() {
                             if (ActivityCompat.checkSelfPermission(activity!!.applicationContext,
                                   android.Manifest.permission.CALL_PHONE)
                                 != PackageManager.PERMISSION_GRANTED){
-                                Toast.makeText(activity!!.applicationContext,"please grant permission",
+                                Toast.makeText(activity!!.applicationContext,
+                                    "please grant permission",
                                     Toast.LENGTH_SHORT).show()
                             }else{
                                 val intent = Intent(Intent.ACTION_CALL)
@@ -116,6 +116,38 @@ class ListingFragment : Fragment() {
                                 startActivity(intent)
                             }
                         }
+
+                holder.favListing.setOnCheckedChangeListener { buttonView, isChecked ->
+                    val currentUser = FirebaseAuth.getInstance().currentUser
+                    if (currentUser != null){
+                        val favouriteRef = database.reference.child("Favourites")
+                            .child(currentUser.uid)
+                            .push()
+                        val key = favouriteRef.key
+                        val favourite = Favourite(model.location,model.description,model.price,
+                            model.images[0],model.userPhoneNumber,model.userName)
+                        if (isChecked){
+                            favouriteRef.setValue(favourite).addOnCompleteListener {
+                                if (it.isSuccessful){
+                                    Toast.makeText(activity!!.applicationContext,
+                                        "added to wish list",Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }else{
+                            val deleteRef = database.reference.child("Favourites")
+                                .child(currentUser.uid).child(key!!)
+                            deleteRef.removeValue().addOnCompleteListener {
+                                if (it.isSuccessful)
+                                    Toast.makeText(activity!!.applicationContext,
+                                        "removed from wish list",Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }else
+                        Toast.makeText(activity!!.applicationContext,"not signed in"
+                            ,Toast.LENGTH_SHORT).show()
+
+
+                }
 
                 showProgress.visibility = if (itemCount == 0) View.VISIBLE else View.GONE
             }
@@ -126,6 +158,10 @@ class ListingFragment : Fragment() {
                     parent, false
                 )
                 return ListingViewHolder(itemView)
+            }
+
+            override fun getItem(position: Int): Listing {
+                return super.getItem(itemCount - 1 - position)
             }
         }
 
@@ -145,7 +181,7 @@ class ListingFragment : Fragment() {
         internal var listingPrice = itemView.findViewById<TextView>(R.id.listing_price)
         internal var listingUsername = itemView.findViewById<TextView>(R.id.listing_user_name)
         internal var callListing = itemView.findViewById<Button>(R.id.call_listing)
-        internal var favListing = itemView.findViewById<Button>(R.id.fav_listing)
+        internal var favListing = itemView.findViewById<ToggleButton>(R.id.fav_listing)
         internal var indicator = itemView.findViewById<CirclePageIndicator>(R.id.indicator)
     }
 

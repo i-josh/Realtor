@@ -7,6 +7,5 @@ data class Listing (
     val location: String = "",
     val description: String = "",
     val price: Long = -1,
-    val images: MutableList<String> = mutableListOf(),
-    val isWished: Boolean = true
+    val images: MutableList<String> = mutableListOf()
 )

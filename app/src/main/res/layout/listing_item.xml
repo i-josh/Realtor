@@ -28,7 +28,7 @@
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="450dp"
+            android:layout_height="500dp"
             android:layout_marginTop="4dp" />
 
         <com.viewpagerindicator.CirclePageIndicator
@@ -42,11 +42,13 @@
             app:pageColor="@android:color/darker_gray"
             app:snap="false" />
 
-        <Button
+        <ToggleButton
             android:id="@+id/fav_listing"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:background="@drawable/ic_favorite_border"
+            android:textOn=""
+            android:textOff=""
+            android:background="@drawable/favourite_button_background"
             android:layout_marginStart="8dp"/>
 
         <TextView
