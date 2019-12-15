@@ -5,10 +5,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +24,6 @@ import com.google.firebase.database.*
 import com.ihiabe.josh.realtor.R
 import com.ihiabe.josh.realtor.adapter.SlideAdapter
 import com.ihiabe.josh.realtor.auth.SignInActivity
-import com.ihiabe.josh.realtor.model.Favourite
 import com.ihiabe.josh.realtor.model.Listing
 import com.viewpagerindicator.CirclePageIndicator
 import java.text.DecimalFormat
@@ -44,6 +45,11 @@ class ListingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(activity!!.applicationContext)
+        val editor = preferences.edit()
+        editor.putBoolean("isFavourite",false)
+        editor.apply()
 
         database = FirebaseDatabase.getInstance()
         listingRef = database.reference.child("Listing")
@@ -73,7 +79,7 @@ class ListingFragment : Fragment() {
                 startActivity(Intent(activity!!.applicationContext,AddListingActivity::class.java))
             else
                 Snackbar.make(view.findViewById(R.id.listingFragment)
-                    ,"Please sign in"
+                    ,"Not signed in"
                     ,Snackbar.LENGTH_LONG).setAction("Sign in"
                 ) {
                     startActivity(Intent(activity!!.applicationContext,SignInActivity::class.java))
@@ -117,36 +123,22 @@ class ListingFragment : Fragment() {
                             }
                         }
 
-                holder.favListing.setOnCheckedChangeListener { buttonView, isChecked ->
-                    val currentUser = FirebaseAuth.getInstance().currentUser
-                    if (currentUser != null){
-                        val favouriteRef = database.reference.child("Favourites")
-                            .child(currentUser.uid)
-                            .push()
-                        val key = favouriteRef.key
-                        val favourite = Favourite(model.location,model.description,model.price,
-                            model.images[0],model.userPhoneNumber,model.userName)
-                        if (isChecked){
-                            favouriteRef.setValue(favourite).addOnCompleteListener {
-                                if (it.isSuccessful){
-                                    Toast.makeText(activity!!.applicationContext,
-                                        "added to wish list",Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }else{
-                            val deleteRef = database.reference.child("Favourites")
-                                .child(currentUser.uid).child(key!!)
-                            deleteRef.removeValue().addOnCompleteListener {
-                                if (it.isSuccessful)
-                                    Toast.makeText(activity!!.applicationContext,
-                                        "removed from wish list",Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }else
-                        Toast.makeText(activity!!.applicationContext,"not signed in"
-                            ,Toast.LENGTH_SHORT).show()
-
-
+                holder.favListing.setOnClickListener {
+                    val preferences = PreferenceManager.getDefaultSharedPreferences(activity!!.
+                    applicationContext)
+                    val editor = preferences.edit()
+                    val isFav = preferences.getBoolean("isFavourite",false)
+                    if (!isFav){
+                        it.background = ContextCompat.getDrawable(activity!!.applicationContext,
+                            R.drawable.ic_bookmark)
+                        editor.putBoolean("isFavourite",true)
+                        editor.apply()
+                    }else{
+                        it.background = ContextCompat.getDrawable(activity!!.applicationContext,
+                            R.drawable.ic_bookmark_blue)
+                        editor.putBoolean("isFavourite",false)
+                        editor.apply()
+                    }
                 }
 
                 showProgress.visibility = if (itemCount == 0) View.VISIBLE else View.GONE
@@ -181,7 +173,7 @@ class ListingFragment : Fragment() {
         internal var listingPrice = itemView.findViewById<TextView>(R.id.listing_price)
         internal var listingUsername = itemView.findViewById<TextView>(R.id.listing_user_name)
         internal var callListing = itemView.findViewById<Button>(R.id.call_listing)
-        internal var favListing = itemView.findViewById<ToggleButton>(R.id.fav_listing)
+        internal var favListing = itemView.findViewById<Button>(R.id.fav_listing)
         internal var indicator = itemView.findViewById<CirclePageIndicator>(R.id.indicator)
     }
 

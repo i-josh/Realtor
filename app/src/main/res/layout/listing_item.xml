@@ -31,25 +31,36 @@
             android:layout_height="500dp"
             android:layout_marginTop="4dp" />
 
-        <com.viewpagerindicator.CirclePageIndicator
-            android:id="@+id/indicator"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:padding="10dp"
-            app:centered="true"
-            app:fillColor="@color/colorAccent"
-            app:pageColor="@android:color/darker_gray"
-            app:snap="false" />
+            android:layout_marginTop="8dp">
 
-        <ToggleButton
-            android:id="@+id/fav_listing"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:textOn=""
-            android:textOff=""
-            android:background="@drawable/favourite_button_background"
-            android:layout_marginStart="8dp"/>
+            <com.viewpagerindicator.CirclePageIndicator
+                android:id="@+id/indicator"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                app:fillColor="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/fav_listing"
+                app:layout_constraintTop_toTopOf="parent"
+                app:pageColor="@android:color/darker_gray"
+                app:snap="false" />
+
+            <Button
+                android:id="@+id/fav_listing"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/ic_bookmark"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/listing_description"

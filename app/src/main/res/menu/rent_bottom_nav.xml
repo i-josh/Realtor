@@ -6,5 +6,5 @@
         android:icon="@drawable/ic_home"/>
     <item android:title="@string/nav_wish_list"
         android:id="@+id/wishListFragment"
-        android:icon="@drawable/ic_favorite"/>
+        android:icon="@drawable/ic_bookmark_blue"/>
 </menu>

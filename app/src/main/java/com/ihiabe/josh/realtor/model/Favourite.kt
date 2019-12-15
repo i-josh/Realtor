@@ -1,6 +1,7 @@
 package com.ihiabe.josh.realtor.model
 
 data class Favourite (
+    val postId: String = "",
     val location: String = "",
     val description: String = "",
     val price: Long = -1,

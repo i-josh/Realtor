@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +22,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.ihiabe.josh.realtor.R
 import com.ihiabe.josh.realtor.model.Favourite
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_wish_list.*
 import java.text.DecimalFormat
 
 class WishListFragment: Fragment() {
@@ -44,8 +44,14 @@ class WishListFragment: Fragment() {
 
         val user = FirebaseAuth.getInstance().currentUser
         database = FirebaseDatabase.getInstance()
-        favouriteRef = database.reference.child("Favourites").child(user!!.uid)
-        initFireBaseUiDatabase()
+
+        if(user != null){
+            favouriteRef = database.reference.child("Favourites").child(user.uid)
+            initFireBaseUiDatabase()
+        }else
+            Toast.makeText(activity!!.applicationContext,"not signed in",Toast.LENGTH_SHORT)
+                .show()
+
     }
 
     private fun initFireBaseUiDatabase(){
@@ -79,10 +85,13 @@ class WishListFragment: Fragment() {
                     intent.data = Uri.parse("tel:${model.phoneNumber}")
                     startActivity(intent)
                 }
-            }
-
-            override fun getItem(position: Int): Favourite {
-                return super.getItem(itemCount - 1 - position)
+                holder.wishDelete.setOnClickListener {
+                    favouriteRef.child(model.postId).removeValue().addOnCompleteListener {
+                        if (it.isSuccessful)
+                            Toast.makeText(activity!!.applicationContext,"removed from wish list",
+                                Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
         wishListRecyclerView.adapter = adapter
@@ -96,5 +105,6 @@ class WishListFragment: Fragment() {
         internal var wishPrice = item.findViewById<TextView>(R.id.wish_price)
         internal var wishUserName = item.findViewById<TextView>(R.id.wish_user_name)
         internal var wishCall = item.findViewById<Button>(R.id.wish_phone)
+        internal var wishDelete = item.findViewById<Button>(R.id.wish_delete)
     }
 }
