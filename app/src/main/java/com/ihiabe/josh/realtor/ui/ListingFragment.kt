@@ -20,10 +20,12 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.ihiabe.josh.realtor.R
 import com.ihiabe.josh.realtor.adapter.SlideAdapter
 import com.ihiabe.josh.realtor.auth.SignInActivity
+import com.ihiabe.josh.realtor.model.Favourite
 import com.ihiabe.josh.realtor.model.Listing
 import com.viewpagerindicator.CirclePageIndicator
 import java.text.DecimalFormat
@@ -32,6 +34,8 @@ class ListingFragment : Fragment() {
 
     private lateinit var database: FirebaseDatabase
     private lateinit var listingRef: DatabaseReference
+    private lateinit var favouriteRef: DatabaseReference
+    private lateinit var user: FirebaseUser
     private lateinit var listingRecyclerView: RecyclerView
     private lateinit var showProgress: ProgressBar
     private lateinit var addListingButton: FloatingActionButton
@@ -53,7 +57,8 @@ class ListingFragment : Fragment() {
 
         database = FirebaseDatabase.getInstance()
         listingRef = database.reference.child("Listing")
-        listingRef.keepSynced(true)
+        user = FirebaseAuth.getInstance().currentUser!!
+        favouriteRef = database.reference.child("Favourites").child(user.uid).push()
 
         listingRecyclerView = view.findViewById(R.id.listing_recycler_view)
         listingRecyclerView.hasFixedSize()
@@ -122,22 +127,28 @@ class ListingFragment : Fragment() {
                                 startActivity(intent)
                             }
                         }
-
+                if (model.bookmarked){
+                    holder.favListing.background = ContextCompat.getDrawable(activity!!.applicationContext,
+                        R.drawable.ic_bookmark_blue)
+                }
+                val postId = favouriteRef.key!!
                 holder.favListing.setOnClickListener {
-                    val preferences = PreferenceManager.getDefaultSharedPreferences(activity!!.
-                    applicationContext)
-                    val editor = preferences.edit()
-                    val isFav = preferences.getBoolean("isFavourite",false)
-                    if (!isFav){
-                        it.background = ContextCompat.getDrawable(activity!!.applicationContext,
+                    if(model.bookmarked){
+                        listingRef.child(model.pushId).child("bookmarked").setValue(false)
+                        favouriteRef.child(postId).removeValue().addOnCompleteListener {
+                            if (it.isSuccessful){
+                                Toast.makeText(activity!!.applicationContext,"Removed from wish list",
+                                    Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        holder.favListing.background = ContextCompat.getDrawable(activity!!.applicationContext,
                             R.drawable.ic_bookmark)
-                        editor.putBoolean("isFavourite",true)
-                        editor.apply()
                     }else{
-                        it.background = ContextCompat.getDrawable(activity!!.applicationContext,
+                        listingRef.child(model.pushId).child("bookmarked").setValue(true)
+                        addBookmark(postId,model.location,model.description,model.price,model.images[0],
+                            model.userPhoneNumber,model.userName)
+                        holder.favListing.background = ContextCompat.getDrawable(activity!!.applicationContext,
                             R.drawable.ic_bookmark_blue)
-                        editor.putBoolean("isFavourite",false)
-                        editor.apply()
                     }
                 }
 
@@ -166,6 +177,19 @@ class ListingFragment : Fragment() {
             arrayOf(android.Manifest.permission.CALL_PHONE),1)
     }
 
+    private fun addBookmark(postId: String,location: String,description: String,price: Long,image: String,
+                            phoneNumber: String,userName: String){
+        val favourite = Favourite(postId,location,description,price,image,phoneNumber,userName)
+        favouriteRef.setValue(favourite).addOnCompleteListener { task ->
+            if (task.isSuccessful)
+                Toast.makeText(activity!!.applicationContext,"Added to wish list"
+                    ,Toast.LENGTH_SHORT).show()
+            else
+                Toast.makeText(activity!!.applicationContext,"could not bookmark, try again"
+                    ,Toast.LENGTH_SHORT).show()
+        }
+    }
+
     class ListingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal var imageSlide = itemView.findViewById<ViewPager>(R.id.pager)
         internal var listinglocation = itemView.findViewById<TextView>(R.id.listing_location)
@@ -176,5 +200,4 @@ class ListingFragment : Fragment() {
         internal var favListing = itemView.findViewById<Button>(R.id.fav_listing)
         internal var indicator = itemView.findViewById<CirclePageIndicator>(R.id.indicator)
     }
-
 }
