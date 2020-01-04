@@ -9,5 +9,5 @@ data class Listing (
     val description: String = "",
     val price: Long = -1,
     val images: MutableList<String> = mutableListOf(),
-    val bookmarked: Boolean = false
+    val bookmarked: Map<String,Boolean> = mapOf()
 )

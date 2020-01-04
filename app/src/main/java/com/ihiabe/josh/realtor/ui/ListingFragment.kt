@@ -127,14 +127,16 @@ class ListingFragment : Fragment() {
                                 startActivity(intent)
                             }
                         }
-                if (model.bookmarked){
+
+                val postId = favouriteRef.key!!
+                val isBookmarked = model.bookmarked[user.uid] == true
+                if (isBookmarked){
                     holder.favListing.background = ContextCompat.getDrawable(activity!!.applicationContext,
                         R.drawable.ic_bookmark_blue)
                 }
-                val postId = favouriteRef.key!!
                 holder.favListing.setOnClickListener {
-                    if(model.bookmarked){
-                        listingRef.child(model.pushId).child("bookmarked").setValue(false)
+                    if(isBookmarked){
+                        listingRef.child(model.pushId).child("bookmarked").child(user.uid).setValue(false)
                         favouriteRef.child(postId).removeValue().addOnCompleteListener {
                             if (it.isSuccessful){
                                 Toast.makeText(activity!!.applicationContext,"Removed from wish list",
@@ -144,7 +146,7 @@ class ListingFragment : Fragment() {
                         holder.favListing.background = ContextCompat.getDrawable(activity!!.applicationContext,
                             R.drawable.ic_bookmark)
                     }else{
-                        listingRef.child(model.pushId).child("bookmarked").setValue(true)
+                        listingRef.child(model.pushId).child("bookmarked").child(user.uid).setValue(true)
                         addBookmark(postId,model.location,model.description,model.price,model.images[0],
                             model.userPhoneNumber,model.userName)
                         holder.favListing.background = ContextCompat.getDrawable(activity!!.applicationContext,
