@@ -20,7 +20,6 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.ihiabe.josh.realtor.R
 import com.ihiabe.josh.realtor.adapter.SlideAdapter
@@ -35,7 +34,6 @@ class ListingFragment : Fragment() {
     private lateinit var database: FirebaseDatabase
     private lateinit var listingRef: DatabaseReference
     private lateinit var favouriteRef: DatabaseReference
-    private lateinit var user: FirebaseUser
     private lateinit var listingRecyclerView: RecyclerView
     private lateinit var showProgress: ProgressBar
     private lateinit var addListingButton: FloatingActionButton
@@ -50,15 +48,15 @@ class ListingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val preferences = PreferenceManager.getDefaultSharedPreferences(activity!!.applicationContext)
+        val preferences =
+            PreferenceManager.getDefaultSharedPreferences(activity!!.applicationContext)
         val editor = preferences.edit()
-        editor.putBoolean("isFavourite",false)
+        editor.putBoolean("isFavourite", false)
         editor.apply()
 
         database = FirebaseDatabase.getInstance()
         listingRef = database.reference.child("Listing")
-        user = FirebaseAuth.getInstance().currentUser!!
-        favouriteRef = database.reference.child("Favourites").child(user.uid).push()
+
 
         listingRecyclerView = view.findViewById(R.id.listing_recycler_view)
         listingRecyclerView.hasFixedSize()
@@ -67,11 +65,11 @@ class ListingFragment : Fragment() {
         showProgress = view.findViewById(R.id.progressBarListing)
         addListingButton = view.findViewById(R.id.add_listing_button)
 
-        listingRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener(){
+        listingRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy<0 && !addListingButton.isShown)
+                if (dy < 0 && !addListingButton.isShown)
                     addListingButton.show()
-                else if (dy>0 && addListingButton.isShown)
+                else if (dy > 0 && addListingButton.isShown)
                     addListingButton.hide()
             }
         })
@@ -79,15 +77,18 @@ class ListingFragment : Fragment() {
         initFireBaseUiDatabase()
 
         addListingButton.setOnClickListener {
-            val user = FirebaseAuth.getInstance().currentUser
-            if (user != null)
-                startActivity(Intent(activity!!.applicationContext,AddListingActivity::class.java))
+            val signedUser = FirebaseAuth.getInstance().currentUser
+            if (signedUser != null)
+                startActivity(Intent(activity!!.applicationContext, AddListingActivity::class.java))
             else
-                Snackbar.make(view.findViewById(R.id.listingFragment)
-                    ,"Not signed in"
-                    ,Snackbar.LENGTH_LONG).setAction("Sign in"
+                Snackbar.make(
+                    view.findViewById(R.id.listingFragment)
+                    , "Not signed in"
+                    , Snackbar.LENGTH_LONG
+                ).setAction(
+                    "Sign in"
                 ) {
-                    startActivity(Intent(activity!!.applicationContext,SignInActivity::class.java))
+                    startActivity(Intent(activity!!.applicationContext, SignInActivity::class.java))
                 }.show()
         }
     }
@@ -105,7 +106,7 @@ class ListingFragment : Fragment() {
                 position: Int,
                 model: Listing
             ) {
-                val slideAdapter = SlideAdapter(activity!!.applicationContext,model.images)
+                val slideAdapter = SlideAdapter(activity!!.applicationContext, model.images)
                 holder.imageSlide.adapter = slideAdapter
                 holder.indicator.setViewPager(holder.imageSlide)
                 holder.listinglocation.text = model.location
@@ -114,43 +115,72 @@ class ListingFragment : Fragment() {
                 holder.listingUsername.text = model.userName
 
                 holder.callListing.setOnClickListener {
-                            requestPhonePermission()
-                            if (ActivityCompat.checkSelfPermission(activity!!.applicationContext,
-                                  android.Manifest.permission.CALL_PHONE)
-                                != PackageManager.PERMISSION_GRANTED){
-                                Toast.makeText(activity!!.applicationContext,
-                                    "please grant permission",
-                                    Toast.LENGTH_SHORT).show()
-                            }else{
-                                val intent = Intent(Intent.ACTION_CALL)
-                                intent.data = Uri.parse("tel:${model.userPhoneNumber}")
-                                startActivity(intent)
-                            }
-                        }
-
-                val postId = favouriteRef.key!!
-                val isBookmarked = model.bookmarked[user.uid] == true
-                if (isBookmarked){
-                    holder.favListing.background = ContextCompat.getDrawable(activity!!.applicationContext,
-                        R.drawable.ic_bookmark_blue)
+                    requestPhonePermission()
+                    if (ActivityCompat.checkSelfPermission(
+                            activity!!.applicationContext,
+                            android.Manifest.permission.CALL_PHONE
+                        )
+                        != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        Toast.makeText(
+                            activity!!.applicationContext,
+                            "please grant permission",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        val intent = Intent(Intent.ACTION_CALL)
+                        intent.data = Uri.parse("tel:${model.userPhoneNumber}")
+                        startActivity(intent)
+                    }
                 }
+
+                val user = FirebaseAuth.getInstance().currentUser
+                if (user == null) {
+                    holder.favListing.isEnabled = false
+                    holder.favListing.background = ContextCompat.getDrawable(
+                        activity!!.applicationContext,
+                        R.drawable.ic_bookmark_grey
+                    )
+                }
+                if (user != null) {
+                    favouriteRef = database.reference.child("Favourites").child(user.uid).push()
+                    val isBookmarked = model.bookmarked[user.uid] == true
+                    if (isBookmarked) {
+                        holder.favListing.background = ContextCompat.getDrawable(
+                            activity!!.applicationContext,
+                            R.drawable.ic_bookmark_blue
+                        )
+                    }
+                }
+
                 holder.favListing.setOnClickListener {
-                    if(isBookmarked){
-                        listingRef.child(model.pushId).child("bookmarked").child(user.uid).setValue(false)
-                        favouriteRef.child(postId).removeValue().addOnCompleteListener {
-                            if (it.isSuccessful){
-                                Toast.makeText(activity!!.applicationContext,"Removed from wish list",
-                                    Toast.LENGTH_SHORT).show()
-                            }
+                    if (user != null) {
+                        val postId = favouriteRef.key!!
+                        val isBookmarked = model.bookmarked[user.uid] == true
+                        if (isBookmarked) {
+                            listingRef.child(model.pushId).child("bookmarked").child(user.uid)
+                                .setValue(false)
+                            holder.favListing.background = ContextCompat.getDrawable(
+                                activity!!.applicationContext,
+                                R.drawable.ic_bookmark
+                            )
+                        } else {
+                            listingRef.child(model.pushId).child("bookmarked").child(user.uid)
+                                .setValue(true)
+                            addBookmark(
+                                postId,
+                                model.location,
+                                model.description,
+                                model.price,
+                                model.images[0],
+                                model.userPhoneNumber,
+                                model.userName
+                            )
+                            holder.favListing.background = ContextCompat.getDrawable(
+                                activity!!.applicationContext,
+                                R.drawable.ic_bookmark_blue
+                            )
                         }
-                        holder.favListing.background = ContextCompat.getDrawable(activity!!.applicationContext,
-                            R.drawable.ic_bookmark)
-                    }else{
-                        listingRef.child(model.pushId).child("bookmarked").child(user.uid).setValue(true)
-                        addBookmark(postId,model.location,model.description,model.price,model.images[0],
-                            model.userPhoneNumber,model.userName)
-                        holder.favListing.background = ContextCompat.getDrawable(activity!!.applicationContext,
-                            R.drawable.ic_bookmark_blue)
                     }
                 }
 
@@ -174,21 +204,30 @@ class ListingFragment : Fragment() {
         adapter.startListening()
     }
 
-    private fun requestPhonePermission(){
-        ActivityCompat.requestPermissions((activity as AppCompatActivity),
-            arrayOf(android.Manifest.permission.CALL_PHONE),1)
+    private fun requestPhonePermission() {
+        ActivityCompat.requestPermissions(
+            (activity as AppCompatActivity),
+            arrayOf(android.Manifest.permission.CALL_PHONE), 1
+        )
     }
 
-    private fun addBookmark(postId: String,location: String,description: String,price: Long,image: String,
-                            phoneNumber: String,userName: String){
-        val favourite = Favourite(postId,location,description,price,image,phoneNumber,userName)
+    private fun addBookmark(
+        postId: String, location: String, description: String, price: Long, image: String,
+        phoneNumber: String, userName: String
+    ) {
+        val favourite =
+            Favourite(postId, location, description, price, image, phoneNumber, userName)
         favouriteRef.setValue(favourite).addOnCompleteListener { task ->
             if (task.isSuccessful)
-                Toast.makeText(activity!!.applicationContext,"Added to wish list"
-                    ,Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    activity!!.applicationContext, "Added to wish list"
+                    , Toast.LENGTH_SHORT
+                ).show()
             else
-                Toast.makeText(activity!!.applicationContext,"could not bookmark, try again"
-                    ,Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    activity!!.applicationContext, "could not bookmark, try again"
+                    , Toast.LENGTH_SHORT
+                ).show()
         }
     }
 
