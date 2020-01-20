@@ -11,6 +11,8 @@ import android.graphics.Color
 import android.net.Uri
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
@@ -39,6 +41,11 @@ class AddListingActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.add_listing_toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.title = "Add Listing"
+
+        val spinnerAdapter = ArrayAdapter.createFromResource(this,R.array.listing_category,
+            android.R.layout.simple_spinner_item)
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        listing_category.adapter = spinnerAdapter
 
         storageReference = FirebaseStorage.getInstance().reference
         auth = FirebaseAuth.getInstance()
@@ -100,7 +107,7 @@ class AddListingActivity : AppCompatActivity() {
                     val userPhoneNumber = user.phoneNumber
                     val userId = auth.currentUser!!.uid
                     val location = add_listing_location.text.toString()
-                    val description = add_listing_description.text.toString()
+                    val description = listing_category.selectedItem.toString()
                     val price = add_listing_price.text.toString().toLong()
                     val images = mutableListOf<String>()
                     images.run {
@@ -207,10 +214,6 @@ class AddListingActivity : AppCompatActivity() {
             add_listing_location.error = "location required"
             return false
         }
-        if (add_listing_description.text!!.isEmpty()) {
-            add_listing_description.error = "description required"
-            return false
-        }
         if (add_listing_price.text!!.isEmpty()) {
             add_listing_price.error = "price required"
             return false
@@ -230,11 +233,13 @@ class AddListingActivity : AppCompatActivity() {
                 var count = 0
                 for (image in imagePaths) {
                     count++
+                    progressBar3.visibility =  View.VISIBLE
                     imagesReference.child("image $count")
                         .putFile(image)
                         .addOnSuccessListener {
                             Toast.makeText(this,"image uploaded",Toast.LENGTH_SHORT)
                                 .show()
+                            progressBar3.visibility =  View.INVISIBLE
                         }
                 }
             }

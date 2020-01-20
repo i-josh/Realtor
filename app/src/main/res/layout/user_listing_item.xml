@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardElevation="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/user_listing_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:drawableStart="@drawable/ic_location"
+            android:drawablePadding="2dp"
+            android:text="@string/location"
+            android:textSize="@dimen/text_very_small" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/user_pager"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginTop="4dp" />
+
+        <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/user_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            app:fillColor="@color/colorAccent"
+            app:pageColor="@android:color/darker_gray"
+            app:snap="false" />
+
+        <TextView
+            android:id="@+id/user_listing_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/colorPrimary"
+            android:padding="4dp"
+            android:text="@string/description"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_very_small" />
+
+        <TextView
+            android:id="@+id/user_listing_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/price"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_large"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/user_delete_listing"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/ic_delete" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

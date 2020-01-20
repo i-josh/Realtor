@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="listing_category">
+        <item>1 bedroom apartment</item>
+        <item>2 bedroom apartment</item>
+        <item>3 bedroom apartment</item>
+        <item>4 bedroom apartment</item>
+        <item>5 bedroom apartment</item>
+    </string-array>
+</resources>

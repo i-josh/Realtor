@@ -45,4 +45,7 @@
     <string name="sign_out">Sign Out</string>
     <string name="feedback">Feedback</string>
     <string name="about_app">About App</string>
+    <string name="profile">Profile</string>
+    <string name="your_posts">Your Posts</string>
+    <string name="edit">EDIT</string>
 </resources>

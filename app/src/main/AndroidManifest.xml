@@ -14,7 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.AboutActivity"></activity>
+        <activity android:name=".ui.ProfileActivity"
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/ProfileTheme"></activity>
+        <activity android:name=".ui.AboutActivity" />
         <activity
             android:name=".ui.AddListingActivity"
             android:windowSoftInputMode="stateHidden" />
@@ -37,7 +40,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainActivity" />
+        <activity android:name=".ui.MainActivity"
+            android:launchMode="singleTop"/>
     </application>
 
 </manifest>
