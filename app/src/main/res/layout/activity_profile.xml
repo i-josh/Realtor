@@ -1,22 +1,26 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:id="@+id/activity_profile">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        >
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="250dp"
+            android:background="@drawable/cover2"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:contentScrim="@color/colorPrimary"
             android:fitsSystemWindows="true"
-            app:expandedTitleGravity="top|center"
-            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Small"
+            app:expandedTitleGravity="bottom|start"
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Medium"
             app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Medium">
 
             <androidx.appcompat.widget.Toolbar
@@ -41,13 +45,14 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.3">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="76dp"
                         android:layout_height="76dp"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/dpw" />
+                        android:src="@drawable/dp" />
                 </RelativeLayout>
 
                 <TextView
@@ -56,7 +61,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="@string/username"
-                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
                     android:textSize="@dimen/text_very_small"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -66,30 +72,32 @@
                     android:id="@+id/profile_phone_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="2dp"
                     android:text="@string/sign_up_phone_number"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@android:color/white"
                     android:textSize="@dimen/text_very_small"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/profile_username" />
+                    app:layout_constraintTop_toBottomOf="@+id/profile_username" />
 
                 <TextView
                     android:id="@+id/profile_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="2dp"
                     android:text="@string/sign_up_email"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@android:color/white"
                     android:textSize="@dimen/text_very_small"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/profile_phone_number" />
+                    app:layout_constraintTop_toBottomOf="@+id/profile_phone_number" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/edit_profile_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_edit"
@@ -106,7 +114,7 @@
         android:textStyle="bold"
         android:textColor="@color/mildBlack"
         app:layout_anchorGravity="top|center"
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
         />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -1,15 +1,16 @@
 package com.ihiabe.josh.realtor.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,8 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.ihiabe.josh.realtor.R
 import com.ihiabe.josh.realtor.adapter.SlideAdapter
 import com.ihiabe.josh.realtor.model.User
@@ -31,6 +34,8 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var userListingRef: Query
     private lateinit var userRef: DatabaseReference
+    private lateinit var listingRef: DatabaseReference
+    private lateinit var imagesRef: StorageReference
     private lateinit var profileRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +47,6 @@ class ProfileActivity : AppCompatActivity() {
 
         supportActionBar!!.title = "Profile"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        //supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
 
         profileRecyclerView = findViewById(R.id.profile_recycler_view)
 
@@ -54,6 +58,13 @@ class ProfileActivity : AppCompatActivity() {
         userListingRef = database.reference.child("Listing").orderByChild("userId")
             .equalTo(user!!.uid)
         userRef = database.reference.child("Users").child(user.uid)
+        listingRef = database.reference.child("Listing")
+        imagesRef = FirebaseStorage.getInstance().reference.child("Images/Listing Images")
+
+        edit_profile_fab.setOnClickListener {
+            startEditProfile()
+            finish()
+        }
 
         initProfileData()
         initFireBaseUiDatabase()
@@ -90,6 +101,34 @@ class ProfileActivity : AppCompatActivity() {
                 holder.listinglocation.text = model.location
                 holder.listingDescription.text = model.description
                 holder.listingPrice.text = "₦${decimalFormat.format(model.price)}"
+                holder.deleteListing.setOnClickListener {
+                    val builder = AlertDialog.Builder(this@ProfileActivity)
+                    builder.setTitle("Delete Listing")
+                    builder.setMessage("Are you sure you want to delete?")
+                    builder.setCancelable(false)
+                    builder.setPositiveButton("Yes"
+                    ) { dialog, which ->
+                        imagesRef.child(model.pushId).delete()
+                        listingRef.child(model.pushId).removeValue().addOnCompleteListener {
+                            if (it.isSuccessful){
+                                Toast.makeText(this@ProfileActivity,"Listing removed",Toast.LENGTH_SHORT)
+                                    .show()
+                                dialog.dismiss()
+                            }
+                        }
+                    }
+                    builder.setNegativeButton("No"){
+                        dialog, which ->
+                        dialog.cancel()
+                    }
+
+                    val alertDialog = builder.create()
+                    alertDialog.show()
+                }
+            }
+
+            override fun getItem(position: Int): UserListing {
+                return super.getItem(itemCount - 1 - position)
             }
         }
         profileRecyclerView.adapter = adapter
@@ -111,6 +150,17 @@ class ProfileActivity : AppCompatActivity() {
         })
     }
 
+    private fun startEditProfile(){
+        val profileUsername = profile_username.text.toString()
+        val profilePhoneNumber = profile_phone_number.text.toString()
+        val profileEmail = profile_email.text.toString()
+        val intent = Intent(this,EditProfileActivity::class.java)
+        intent.putExtra(EXTRA_USERNAME,profileUsername)
+        intent.putExtra(EXTRA_PHONE_NUMBER,profilePhoneNumber)
+        intent.putExtra(EXTRA_EMAIL,profileEmail)
+        startActivity(intent)
+    }
+
     class UserListingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal var imageSlide = itemView.findViewById<ViewPager>(R.id.user_pager)
         internal var listinglocation = itemView.findViewById<TextView>(R.id.user_listing_location)
@@ -118,5 +168,11 @@ class ProfileActivity : AppCompatActivity() {
         internal var listingPrice = itemView.findViewById<TextView>(R.id.user_listing_price)
         internal var deleteListing = itemView.findViewById<Button>(R.id.user_delete_listing)
         internal var indicator = itemView.findViewById<CirclePageIndicator>(R.id.user_indicator)
+    }
+
+    companion object{
+        const val EXTRA_USERNAME = "com.ihiabe.josh.realtor.ui.EXTRA_USERNAME"
+        const val EXTRA_PHONE_NUMBER = "com.ihiabe.josh.realtor.ui.EXTRA_PHONE_NUMBER"
+        const val EXTRA_EMAIL = "com.ihiabe.josh.realtor.ui.EXTRA_EMAIL"
     }
 }
