@@ -31,6 +31,7 @@ class AddListingActivity : AppCompatActivity() {
     private lateinit var userRef: DatabaseReference
     private lateinit var storageReference: StorageReference
     private lateinit var imagesReference: StorageReference
+    private lateinit var dpRef: StorageReference
     private lateinit var pushId: String
     private lateinit var auth: FirebaseAuth
 
@@ -61,6 +62,11 @@ class AddListingActivity : AppCompatActivity() {
             .child("Images")
             .child("Listing Images")
             .child(pushId)
+
+        dpRef = storageReference
+            .child("Images")
+            .child("Profile Pictures")
+            .child(auth.currentUser!!.uid)
 
         add_images_button.setOnClickListener {
             addImageFromGallery()
@@ -112,20 +118,26 @@ class AddListingActivity : AppCompatActivity() {
                     val images = mutableListOf<String>()
                     images.run {
                         imagesReference.child("image 1").downloadUrl.addOnSuccessListener {
-                            add(it.toString())
-                            val listing = Listing(pushId,userId,userName,userPhoneNumber,location,description,price,images)
-                            listingReference.setValue(listing).addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    Toast.makeText(applicationContext, "listing added"
-                                        , Toast.LENGTH_SHORT)
-                                        .show()
-                                    startActivity(Intent(applicationContext, MainActivity::class.java))
-                                    finish()
+                            dpRef.downloadUrl.addOnSuccessListener {dp->
+                                val profilePic = dp.toString()
+                                val listing = Listing(pushId,userId,userName,userPhoneNumber,profilePic,location,description,price,images)
+                                listingReference.setValue(listing).addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Toast.makeText(applicationContext, "listing added"
+                                            , Toast.LENGTH_SHORT)
+                                            .show()
+                                        startActivity(Intent(applicationContext, MainActivity::class.java))
+                                        finish()
+                                    }
                                 }
                             }
+                            add(it.toString())
                         }
                     }
-                    add(images, userId, userName, userPhoneNumber, location, description, price)
+                    dpRef.downloadUrl.addOnSuccessListener {
+                        val profilePic = it.toString()
+                        add(images, userId, userName, userPhoneNumber, profilePic, location, description, price)
+                    }
                 }
 
                 override fun onCancelled(p0: DatabaseError) {
@@ -140,6 +152,7 @@ class AddListingActivity : AppCompatActivity() {
         userId: String,
         userName: String,
         userPhoneNumber: String,
+        userImage: String,
         location: String,
         description: String,
         price: Long
@@ -147,63 +160,63 @@ class AddListingActivity : AppCompatActivity() {
         images.run {
             imagesReference.child("image 2").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(pushId,userId, userName, userPhoneNumber, location, description, price, images)
+                val listing = Listing(pushId,userId, userName, userPhoneNumber, userImage, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 3").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(pushId,userId, userName, userPhoneNumber, location, description, price, images)
+                val listing = Listing(pushId,userId, userName, userPhoneNumber, userImage, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 4").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(pushId,userId, userName, userPhoneNumber, location, description, price, images)
+                val listing = Listing(pushId,userId, userName, userPhoneNumber, userImage, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 5").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(pushId,userId, userName, userPhoneNumber, location, description, price, images)
+                val listing = Listing(pushId,userId, userName, userPhoneNumber, userImage, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 6").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(pushId,userId, userName, userPhoneNumber, location, description, price, images)
+                val listing = Listing(pushId,userId, userName, userPhoneNumber, userImage, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 7").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(pushId,userId, userName, userPhoneNumber, location, description, price, images)
+                val listing = Listing(pushId,userId, userName, userPhoneNumber, userImage, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 8").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(pushId,userId, userName, userPhoneNumber, location, description, price, images)
+                val listing = Listing(pushId,userId, userName, userPhoneNumber, userImage, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 9").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(pushId,userId, userName, userPhoneNumber, location, description, price, images)
+                val listing = Listing(pushId,userId, userName, userPhoneNumber, userImage, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }
         images.run {
             imagesReference.child("image 10").downloadUrl.addOnSuccessListener {
                 add(it.toString())
-                val listing = Listing(pushId,userId, userName, userPhoneNumber, location, description, price, images)
+                val listing = Listing(pushId,userId, userName, userPhoneNumber, userImage, location, description, price, images)
                 listingReference.setValue(listing)
             }
         }

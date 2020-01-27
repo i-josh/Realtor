@@ -1,5 +1,6 @@
 package com.ihiabe.josh.realtor.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -8,14 +9,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.ihiabe.josh.realtor.R
 import com.ihiabe.josh.realtor.model.User
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_edit_profile.*
+import java.lang.Exception
 
 class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var database: FirebaseDatabase
     private lateinit var userRef: DatabaseReference
+    private lateinit var dpRef: StorageReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +35,16 @@ class EditProfileActivity : AppCompatActivity() {
         val user = FirebaseAuth.getInstance().currentUser
         database = FirebaseDatabase.getInstance()
         userRef = database.reference.child("Users").child(user!!.uid)
+        dpRef = FirebaseStorage.getInstance().reference.child("Images")
+            .child("Profile Pictures").child(user.uid)
 
         getExtras()
+
+        frameLayout.setOnClickListener {
+            launchGallery()
+        }
+
+        setProfilePic()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -67,6 +81,39 @@ class EditProfileActivity : AppCompatActivity() {
         edit_user_name.append(extraUsername)
         edit_phone_number.append(extraPhoneNumber)
         edit_email.append(extraEmail)
+    }
 
+    private fun launchGallery(){
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent,"select image"),PICK_IMAGE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null){
+            val imagePath = data.data
+            Picasso.with(this).load(imagePath).fit().centerCrop().into(edit_profile_image)
+            try {
+                dpRef.putFile(imagePath!!).addOnSuccessListener {
+                    Toast.makeText(this@EditProfileActivity, "Upload Successful", Toast.LENGTH_SHORT)
+                        .show()
+                    setProfilePic()
+                }
+            }catch (e: Exception){
+                e.stackTrace
+            }
+        }
+    }
+
+    private fun setProfilePic(){
+        dpRef.downloadUrl.addOnSuccessListener {
+            Picasso.with(this).load(it).centerCrop().fit().into(edit_profile_image)
+        }
+    }
+
+    companion object{
+        const val PICK_IMAGE = 123
     }
 }

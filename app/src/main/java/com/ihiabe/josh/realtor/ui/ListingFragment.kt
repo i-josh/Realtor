@@ -26,7 +26,9 @@ import com.ihiabe.josh.realtor.adapter.SlideAdapter
 import com.ihiabe.josh.realtor.auth.SignInActivity
 import com.ihiabe.josh.realtor.model.Favourite
 import com.ihiabe.josh.realtor.model.Listing
+import com.squareup.picasso.Picasso
 import com.viewpagerindicator.CirclePageIndicator
+import de.hdodenhof.circleimageview.CircleImageView
 import java.text.DecimalFormat
 
 class ListingFragment : Fragment() {
@@ -113,6 +115,8 @@ class ListingFragment : Fragment() {
                 holder.listingDescription.text = model.description
                 holder.listingPrice.text = "₦${decimalFormat.format(model.price)}"
                 holder.listingUsername.text = model.userName
+                Picasso.with(activity!!.applicationContext).load(model.userImage).fit().centerCrop()
+                    .into(holder.listingUserImage)
 
                 holder.callListing.setOnClickListener {
                     requestPhonePermission()
@@ -237,6 +241,7 @@ class ListingFragment : Fragment() {
         internal var listingDescription = itemView.findViewById<TextView>(R.id.listing_description)
         internal var listingPrice = itemView.findViewById<TextView>(R.id.listing_price)
         internal var listingUsername = itemView.findViewById<TextView>(R.id.listing_user_name)
+        internal var listingUserImage = itemView.findViewById<CircleImageView>(R.id.listing_user_image)
         internal var callListing = itemView.findViewById<Button>(R.id.call_listing)
         internal var favListing = itemView.findViewById<Button>(R.id.fav_listing)
         internal var indicator = itemView.findViewById<CirclePageIndicator>(R.id.indicator)

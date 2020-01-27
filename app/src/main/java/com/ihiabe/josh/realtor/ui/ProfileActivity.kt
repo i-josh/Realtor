@@ -25,7 +25,9 @@ import com.ihiabe.josh.realtor.R
 import com.ihiabe.josh.realtor.adapter.SlideAdapter
 import com.ihiabe.josh.realtor.model.User
 import com.ihiabe.josh.realtor.model.UserListing
+import com.squareup.picasso.Picasso
 import com.viewpagerindicator.CirclePageIndicator
+import kotlinx.android.synthetic.main.activity_edit_profile.*
 import kotlinx.android.synthetic.main.activity_profile.*
 import java.text.DecimalFormat
 
@@ -36,6 +38,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var userRef: DatabaseReference
     private lateinit var listingRef: DatabaseReference
     private lateinit var imagesRef: StorageReference
+    private lateinit var dpRef: StorageReference
     private lateinit var profileRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +63,8 @@ class ProfileActivity : AppCompatActivity() {
         userRef = database.reference.child("Users").child(user.uid)
         listingRef = database.reference.child("Listing")
         imagesRef = FirebaseStorage.getInstance().reference.child("Images/Listing Images")
+        dpRef = FirebaseStorage.getInstance().reference.child("Images")
+            .child("Profile Pictures").child(user.uid)
 
         edit_profile_fab.setOnClickListener {
             startEditProfile()
@@ -67,6 +72,7 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         initProfileData()
+        setProfilePic()
         initFireBaseUiDatabase()
     }
 
@@ -148,6 +154,12 @@ class ProfileActivity : AppCompatActivity() {
                 Toast.makeText(this@ProfileActivity,p0.message,Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun setProfilePic(){
+        dpRef.downloadUrl.addOnSuccessListener {
+            Picasso.with(this).load(it).centerCrop().fit().into(profile_image)
+        }
     }
 
     private fun startEditProfile(){

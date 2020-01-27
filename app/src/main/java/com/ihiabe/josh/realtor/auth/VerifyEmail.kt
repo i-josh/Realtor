@@ -1,12 +1,15 @@
 package com.ihiabe.josh.realtor.auth
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_verify_email.*
 import com.ihiabe.josh.realtor.R
 import com.ihiabe.josh.realtor.model.User
@@ -20,6 +23,7 @@ class VerifyEmail : AppCompatActivity() {
         setContentView(R.layout.activity_verify_email)
         auth = FirebaseAuth.getInstance()
         val databaseReference = FirebaseDatabase.getInstance().reference
+        val storageReference = FirebaseStorage.getInstance().reference
 
         val phoneNumber = intent.getStringExtra(SignUpActivity.PHONE_NUMBER)
         val fullName = intent.getStringExtra(SignUpActivity.FULL_NAME)
@@ -27,6 +31,8 @@ class VerifyEmail : AppCompatActivity() {
         val birthYear = intent.getStringExtra(SignUpActivity.BIRTH_YEAR)
         val password = intent.getStringExtra(SignUpActivity.PASSWORD)
         val newUser = User(fullName, email, phoneNumber, birthYear)
+        val defaultProfilePic = Uri.parse("android.resource://com.ihiabe.josh.realtor/" +
+                "drawable/dp")
 
         verify_email.text = email
 
@@ -36,6 +42,8 @@ class VerifyEmail : AppCompatActivity() {
                 if (task.isSuccessful){
                     sendVerificationEmail()
                     databaseReference.child("Users").child(auth.uid!!).setValue(newUser)
+                    storageReference.child("Images/Profile Pictures").child(auth.uid!!)
+                        .putFile(defaultProfilePic)
                     startActivity(Intent(this@VerifyEmail,SignInActivity::class.java))
                     finish()
                 }
