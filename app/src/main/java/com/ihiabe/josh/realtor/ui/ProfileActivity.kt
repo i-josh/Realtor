@@ -68,7 +68,6 @@ class ProfileActivity : AppCompatActivity() {
 
         edit_profile_fab.setOnClickListener {
             startEditProfile()
-            finish()
         }
 
         initProfileData()

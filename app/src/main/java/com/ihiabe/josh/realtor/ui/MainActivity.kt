@@ -1,6 +1,7 @@
 package com.ihiabe.josh.realtor.ui
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -18,9 +19,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import com.ihiabe.josh.realtor.R
 import com.ihiabe.josh.realtor.auth.SignInActivity
 import com.ihiabe.josh.realtor.model.User
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.header_layout.*
 
@@ -50,6 +53,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
         setDrawerUserName()
+        setDrawerUserImage()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -86,6 +90,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    private fun setDrawerUserImage(){
+        if (user != null){
+            val dpRef = FirebaseStorage.getInstance().reference
+                .child("Images/Profile Pictures/${user!!.uid}")
+            dpRef.downloadUrl.addOnSuccessListener{
+                Picasso.with(this@MainActivity).load(it).fit().centerCrop()
+                    .into(drawer_header_user_image)
+            }
+        }
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.drawer_home -> startActivity(Intent(this,MainActivity::class.java))
@@ -99,10 +114,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun signOutUser() {
+        val defaultProfilePic = Uri.parse("android.resource://com.ihiabe.josh.realtor/" +
+                "drawable/dp")
         if (user != null){
             FirebaseAuth.getInstance().signOut()
             Toast.makeText(this,"user signed out",Toast.LENGTH_SHORT).show()
             drawer_header_user_name.text = ""
+            Picasso.with(this@MainActivity).load(defaultProfilePic).fit().centerCrop()
+                .into(drawer_header_user_image)
         } else
             Toast.makeText(this,"no user found",Toast.LENGTH_SHORT).show()
     }

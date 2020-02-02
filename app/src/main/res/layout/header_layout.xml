@@ -6,6 +6,7 @@
     android:padding="16dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/drawer_header_user_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:paddingTop="16dp"
