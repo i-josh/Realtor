@@ -50,4 +50,5 @@
     <string name="edit">EDIT</string>
     <string name="add_a_photo">Add a photo</string>
     <string name="save">SAVE</string>
+    <string name="version_1_0">Version 1.0</string>
 </resources>
